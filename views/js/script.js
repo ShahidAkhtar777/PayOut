@@ -1,3 +1,41 @@
+class BinaryHeap{
+    constructor() {
+        this.heap = [];
+    }
+
+    size() {
+        return this.heap.length;
+    }
+
+    empty(){
+        return ( this.size()===0 );
+    }
+
+    insert(value) {
+        console.log(value);
+        this.heap.push(value);
+        this.bubbleUp();
+    }
+
+    bubbleUp() 
+    {
+        let index = this.size() - 1;
+        while (index > 0) 
+        {
+            let element = this.heap[index],
+                parentIndex = Math.floor((index - 1) / 2),
+                parent = this.heap[parentIndex];
+
+            if (parent[0] >= element[0]) break;
+            this.heap[index] = parent;
+            this.heap[parentIndex] = element;
+            index = parentIndex
+        }
+    }
+   
+};
+
+
 onload = function () 
 {
     // create a network
@@ -42,15 +80,15 @@ onload = function ()
 
     function createData()
     {
-        vertices = Math.floor(Math.random() * 8) + 2;
-        nodes = [];
+        let vertices = Math.floor(Math.random() * 8) + 2;
+        let nodes = [];
         for(i=1;i<=vertices;i++)
         {
             nodes.push({id:i, label:"Person "+i})
         }
         nodes = new vis.DataSet(nodes);
 
-        edges = [];
+        let edges = [];
         for(i=1;i<=vertices;i++)
         {
             for(j=i+1;j<=vertices;j++)
@@ -74,9 +112,22 @@ onload = function ()
     genNew.onclick = function () {
         createData();
         network.setData(curr_data);
-        temptext.style.display = "inline";
         container2.style.display = "none";
     };
 
+    solve.onclick = function () {
+        container2.style.display = "inline";
+        let heap = new BinaryHeap();
+        console.log(BinaryHeap);
+        for(let i=0;i<curr_data['nodes'].length;i++)
+        {
+            const edge = curr_data['edges'][i];
+            heap.insert([parseInt(edge['label']),parseInt(edge['from'])]);
+        }
+        console.log(heap);
+    };
+
+   
     genNew.click();
 };
+
