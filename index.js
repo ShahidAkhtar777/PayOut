@@ -18,6 +18,6 @@ app.post("/",function(req,res){
     res.render("index",{ user: 1,vertex: vertex,edges: edges});
 });
 
-app.listen(3000,function(){
+app.listen(process.env.PORT || 3000,function(){
     console.log("Server started on port 3000");
 });
