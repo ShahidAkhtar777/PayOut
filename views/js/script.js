@@ -77,6 +77,8 @@ onload = function ()
     const genNew = document.getElementById('generate-graph');
     const solve = document.getElementById('solve');
     const transactions = this.document.getElementById('trans').innerText;
+    var user = document.getElementById('u').innerText;
+
 
     // initialise graph options
     const options = {
@@ -112,35 +114,79 @@ onload = function ()
 
     function createData()
     {
-        const vertices = Math.floor(Math.random() * 8) + 2;
+        if(user === "0")
+        {
+            const vertices = Math.floor(Math.random() * 8) + 2;
 
-        // Adding people to nodes array
-        let nodes = [];
-        for(let i=1;i<=vertices;i++){
-            nodes.push({id:i, label:"Person " + i})
-        }
-        nodes = new vis.DataSet(nodes);
+            // Adding people to nodes array
+            let nodes = [];
+            for(let i=1;i<=vertices;i++){
+                nodes.push({id:i, label:"Person " + i})
+            }
+            nodes = new vis.DataSet(nodes);
 
-        // Dynamically creating edges with random amount to be paid from one to another friend
-        const edges = [];
-        for(let i=1;i<=vertices;i++){
-            for(let j=i+1;j<=vertices;j++)
-            {
-                // Modifies the amount of edges added in the graph around n(n-1)/4 
-                if(Math.random() > 0.5){
-                    // direction of cash flow on edge
-                    if(Math.random() > 0.5)
-                        edges.push({from: i, to: j, label: String(Math.floor(Math.random()*100)+1)});
-                    else
-                        edges.push({from: j, to: i, label: String(Math.floor(Math.random()*100)+1)});
+            // Dynamically creating edges with random amount to be paid from one to another friend
+            const edges = [];
+            for(let i=1;i<=vertices;i++){
+                for(let j=i+1;j<=vertices;j++)
+                {
+                    // Modifies the amount of edges added in the graph around n(n-1)/4 
+                    if(Math.random() > 0.5){
+                        // direction of cash flow on edge
+                        if(Math.random() > 0.5)
+                            edges.push({from: i, to: j, label: String(Math.floor(Math.random()*100)+1)});
+                        else
+                            edges.push({from: j, to: i, label: String(Math.floor(Math.random()*100)+1)});
+                    }
                 }
             }
+            const data = {
+                nodes: nodes,
+                edges: edges
+            };
+            return data;
         }
-        const data = {
-            nodes: nodes,
-            edges: edges
-        };
-        return data;
+        else{
+            let v = document.getElementById('v').innerText;
+            let res = v.split(",");
+            
+            const friends = res;
+            let len = friends.length;
+            let vertices = [];
+
+            for(let i=1;i<=len;i++){
+                vertices.push({id:i, label: friends[i-1]})
+            }
+
+            // console.log(vertices);
+            
+            // Adding Transaction edges in edges[]
+            let e = document.getElementById('e').innerText;
+
+            var ed = e.split("-");
+            var ln = ed.length;
+            
+            let edges = [];
+            for(var i=0;i<ln;i++)
+            {
+                var edge = ed[i];
+                var len2 = edge.length;
+                var sub_str = edge.substr(1, len2-2);
+                var edge_data = sub_str.split(",");
+
+                let st = friends.indexOf(edge_data[0])+1;
+                let end = friends.indexOf(edge_data[1])+1;
+                let wt = edge_data[2];
+
+                edges.push({type:0,from: st,to: end, label: String(wt)});
+            }
+
+            let data ={
+                nodes: vertices,
+                edges: edges
+            };
+            return data;
+        }
     }
 
     genNew.onclick = function () {
@@ -208,7 +254,7 @@ onload = function ()
         transactions_no = new_edges.length;
         document.getElementById('trans').innerText = transactions + ' : ' + transactions_no;
         
-
+        user = "0";
         data = {
             nodes: data['nodes'],
             edges: new_edges

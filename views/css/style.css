@@ -36,6 +36,20 @@ body {
     display:block;
 }
 
+#project{
+    font-family: 'Great Vibes', cursive;
+    font-size: 40px;
+}
+
+
+#user-graph, #generate-graph{
+    display: inline;
+}
+
+button{
+    width: 150px;
+}
+
 
 #solve{
     margin:auto;
